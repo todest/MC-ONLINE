@@ -1,4 +1,6 @@
 import configparser
+import os
+import sys
 
 
 class Config:
@@ -7,7 +9,7 @@ class Config:
         'mc': ['local_port', 'remote_port']
     }
 
-    def __init__(self, path="mc.ini"):
+    def __init__(self, path=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "mc.ini")):
         self.path = path
         self.config = configparser.ConfigParser()
         self.config.read(self.path)
