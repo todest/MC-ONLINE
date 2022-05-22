@@ -28,7 +28,7 @@ def listen():
             groups = port_regex.search(after[1])
             server_port = groups.group(2)
             server_data = re.sub(
-                r'\[AD\].*\[/AD\]', "", "\n[Server: \"" + msg.decode("utf-8").replace("[MOTD]", "").replace(
+                r'\[AD].*\[/AD]', "", "\n[Server: \"" + msg.decode("utf-8").replace("[MOTD]", "").replace(
                     "[/MOTD]", "\", ")) + "Address: \"" + address + ":" + str(server_port) + '"]'
             return server_port, server_data
 

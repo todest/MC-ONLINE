@@ -17,7 +17,7 @@ class MainWindow(QMainWindow):
 
         widget = QWidget()
         widget.setLayout(QtWidgets.QVBoxLayout())
-        widget.setMinimumSize(500, 300)
+        widget.setMinimumSize(800, 500)
         widget.setStyleSheet("QWidget{border:1px solid #014F84}")
         self.setCentralWidget(widget)
 
@@ -90,7 +90,7 @@ class MainWindow(QMainWindow):
     @staticmethod
     def log_panel(parent):
         panel = QtWidgets.QWidget(parent)
-        panel.setMinimumSize(0, 300)
+        panel.setMinimumSize(800, 200)
         panel.setLayout(QtWidgets.QHBoxLayout())
         panel.layout().setContentsMargins(0, 0, 0, 0)
         panel.layout().setSpacing(0)
@@ -112,7 +112,7 @@ class MainWindow(QMainWindow):
             button.setText('停止')
             self.window().findChild(QtWidgets.QTextBrowser, "logger").clear()
             self.thread = LanThread()
-            self.process_log('[info] start listening ...')
+            self.process_log('[Client: "start listening ..."]')
             self.thread.breakSignal.connect(self.process_local_port)
             self.thread.start()
             self.frp_thread = FrpThread(self.thread)
@@ -130,7 +130,7 @@ class MainWindow(QMainWindow):
 
     def process_local_port(self, port, content):
         self.window().findChild(QtWidgets.QLineEdit, "local_port").setText(port)
-        self.process_log("[info] port has been changed to {}".format(port))
+        self.process_log('[Client: "port has been changed to {}"]'.format(port))
         self.process_log(content)
 
     def process_log(self, log):
