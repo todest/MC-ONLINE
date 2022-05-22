@@ -26,7 +26,7 @@ class FrpThread(QThread):
     def run(self):
         self.pthread.wait()
         p = subprocess.Popen(
-            ['frpc', '-c', 'mc.ini'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+            ['frpc', '-c', 'mc.ini'], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
         )
         while p.poll() is None:
             if p.stdout:
