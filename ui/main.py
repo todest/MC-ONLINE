@@ -63,6 +63,20 @@ class MainWindow(QMainWindow):
         button = QtWidgets.QPushButton(parent)
         button.setText("启动")
         button.setObjectName("button")
+        button.setStyleSheet(
+            """
+            QPushButton {
+                font: 700 16pt;
+                background-color: rgb(255, 255, 255);
+            }
+            QPushButton:hover {
+                color: rgb(0, 0, 0);
+            }
+            QPushButton:pressed {
+                background-color: rgb(255, 255, 255);
+            }
+            """
+        )
         button.clicked.connect(lambda: self.button_clicked_event(button))
         panel.layout().addWidget(button)
         return panel
