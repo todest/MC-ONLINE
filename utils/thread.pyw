@@ -1,4 +1,5 @@
 import subprocess
+import time
 
 from PyQt5.QtCore import QThread, pyqtSignal
 
@@ -12,19 +13,23 @@ class LanThread(QThread):
         super().__init__()
 
     def run(self):
-        port, content = listen()
-        self.breakSignal.emit(port, content)
+        port, content = None, None
+        while True:
+            data = listen()
+            if (port, content) != data:
+                port, content = data
+                self.breakSignal.emit(port, content)
+                time.sleep(10)
+            time.sleep(3)
 
 
 class FrpThread(QThread):
     breakSignal = pyqtSignal(str)
 
-    def __init__(self, thread):
+    def __init__(self):
         super().__init__()
-        self.pthread = thread
 
     def run(self):
-        self.pthread.wait()
         p = subprocess.Popen(
             ['frpc', '-c', 'mc.ini'], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
         )

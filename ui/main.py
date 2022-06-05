@@ -129,23 +129,38 @@ class MainWindow(QMainWindow):
             self.process_log('[Client: "start listening ..."]')
             self.thread.breakSignal.connect(self.process_local_port)
             self.thread.start()
-            self.frp_thread = FrpThread(self.thread)
-            self.frp_thread.breakSignal.connect(self.process_log)
-            self.frp_thread.start()
         else:
-            self.thread.terminate()
-            self.thread.quit()
-            self.frp_thread.terminate()
-            self.frp_thread.quit()
-
-            for x in psutil.Process(os.getpid()).children(recursive=True):
-                x.kill()
+            self.close_thread()
+            self.close_frp()
             button.setText('启动')
 
+    def close_thread(self):
+        self.thread.terminate()
+        self.thread.quit()
+        for x in psutil.Process(os.getpid()).children(recursive=True):
+            x.kill()
+        self.thread = None
+
+    def close_frp(self):
+        if not self.frp_thread:
+            return
+        self.frp_thread.terminate()
+        self.frp_thread.quit()
+        for x in psutil.Process(os.getpid()).children(recursive=True):
+            x.kill()
+        self.frp_thread = None
+
     def process_local_port(self, port, content):
-        self.window().findChild(QtWidgets.QLineEdit, "local_port").setText(port)
-        self.process_log('[Client: "port has been changed to {}"]'.format(port))
+        port_edit = self.window().findChild(QtWidgets.QLineEdit, "local_port")
+        if port_edit.text() != port:
+            port_edit.setText(port)
+            self.process_log('\n[Client: "port has been changed to {}"]'.format(port))
         self.process_log(content)
+        if port_edit.text() != port:
+            self.close_frp()
+            self.frp_thread = FrpThread()
+            self.frp_thread.breakSignal.connect(self.process_log)
+            self.frp_thread.start()
 
     def process_log(self, log):
         logger = self.window().findChild(QtWidgets.QTextBrowser, "logger")
