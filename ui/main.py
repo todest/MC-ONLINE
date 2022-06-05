@@ -152,11 +152,12 @@ class MainWindow(QMainWindow):
 
     def process_local_port(self, port, content):
         port_edit = self.window().findChild(QtWidgets.QLineEdit, "local_port")
-        if port_edit.text() != port:
+        last_port = port_edit.text()
+        if last_port != port:
             port_edit.setText(port)
             self.process_log('\n[Client: "port has been changed to {}"]'.format(port))
         self.process_log(content)
-        if port_edit.text() != port:
+        if (not self.frp_thread) or last_port != port:
             self.close_frp()
             self.frp_thread = FrpThread()
             self.frp_thread.breakSignal.connect(self.process_log)

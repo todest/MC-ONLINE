@@ -19,7 +19,7 @@ class LanThread(QThread):
             if (port, content) != data:
                 port, content = data
                 self.breakSignal.emit(port, content)
-                time.sleep(10)
+                time.sleep(3)
             time.sleep(3)
 
 
